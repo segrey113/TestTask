@@ -16,12 +16,14 @@ import java.util.Calendar;
 @Getter
 @AllArgsConstructor
 public class Order {
+
     private String id;
     private String url;
     private String userName;
     private String password;
     private String basicURL;
-    private Response getOrderInformathion(){
+
+    private Response getOrderInformation() {
         RequestSpecification orderStatusSpecification = new RequestSpecBuilder()
                 .setBaseUri(basicURL + "/getOrderStatusExtended.do")
                 .addParam("userName", userName)
@@ -32,7 +34,7 @@ public class Order {
     }
 
     public OrderStatus getOrderStatus() throws JsonProcessingException {
-        Response response = getOrderInformathion();
+        Response response = getOrderInformation();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode newNode = mapper.readTree(response.asString());
         switch (newNode.path("orderStatus").asInt()) {
@@ -48,7 +50,8 @@ public class Order {
                 return OrderStatus.REFUND;
             case (6):
                 return OrderStatus.DECLINED;
-            default:throw new IllegalArgumentException();
+            default:
+                throw new IllegalArgumentException();
 
         }
 
@@ -69,27 +72,28 @@ public class Order {
                 .addFormParam("bindingNotNeeded", true)
                 .addFormParam("jsonParams", "{\"pageName\":\"rbs\"}")
                 .build();
-        Response response = RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
+        RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
 
     }
+
     public long getRefundedAmount() throws JsonProcessingException {
-        Response response=getOrderInformathion();
+        Response response = getOrderInformation();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode newNode = mapper.readTree(response.asString());
         return newNode.path("paymentAmountInfo").path("refundedAmount").asLong();
     }
 
-    public void reverse(){
+    public void reverse() {
         RequestSpecification orderStatusSpecification = new RequestSpecBuilder()
                 .setBaseUri(basicURL + "/reverse.do")
                 .addFormParam("userName", userName)
                 .addFormParam("password", password)
                 .addFormParam("orderId", id)
                 .build();
-        Response response = RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
+        RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
     }
 
-    public void refund(long amount){
+    public void refund(long amount) {
         RequestSpecification orderStatusSpecification = new RequestSpecBuilder()
                 .setBaseUri(basicURL + "/refund.do")
                 .addFormParam("userName", userName)
@@ -97,7 +101,7 @@ public class Order {
                 .addFormParam("orderId", id)
                 .addFormParam("amount", amount)
                 .build();
-        Response response = RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
+        RestAssured.given().spec(orderStatusSpecification).when().post().then().extract().response();
     }
 
     private String getCardsYearInFullFormat(String cardYear) {
