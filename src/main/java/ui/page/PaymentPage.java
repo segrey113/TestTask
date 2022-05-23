@@ -33,23 +33,9 @@ public class PaymentPage extends BasePage {
     @FindBy(xpath = "//div[@id='emailCheckboxBlock']//span[@class='checkbox']")
     private WebElement emailCheckbox;
 
-    //timers
-    @FindBy(xpath = "//div[@id='numberCountdown']")
-    private WebElement timer;
-
     //buttons
     @FindBy(xpath = "//button[@id='buttonPayment']")
     private WebElement payButton;
-
-    //text fields with order information
-    @FindBy(xpath = "//span[@id='amount']")
-    private WebElement amountField;
-
-    @FindBy(xpath = "//span[@id='orderNumber']")
-    private WebElement orderNumberField;
-
-    @FindBy(xpath = "//span[@id='description']")
-    private WebElement descriptionField;
 
 
     //inputs

@@ -1,14 +1,14 @@
 package ui.page;
 
+import api.BaseTest;
 import api.OrderStatus;
-import api.OrderTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.*;
 import ui.driver.DriverProvider;
 import utils.Card;
 import utils.PropertyHelper;
 
-public class PaymentPageTest extends OrderTest {
+public class PaymentPageTest extends BaseTest {
 
     private PaymentPage paymentPage;
 

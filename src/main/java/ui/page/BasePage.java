@@ -6,8 +6,9 @@ import ui.driver.DriverProvider;
 
 public abstract class BasePage {
     WebDriver driver;
+
     public BasePage() {
-        driver=DriverProvider.getDriver();
+        driver = DriverProvider.getDriver();
         PageFactory.initElements(driver, this);
     }
 }

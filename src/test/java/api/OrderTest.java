@@ -6,87 +6,27 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import utils.Card;
 import utils.PropertyHelper;
 
-public class OrderTest {
 
-    protected static OrderFactory factory = OrderFactory.getFactory();
-    protected static int sleepTime = PropertyHelper.getConf().getSleepTime() * 1000;
-    protected static int maxCountOfPayTry = PropertyHelper.getConf().getMaxCountOfPayTry();
+public class OrderTest extends BaseTest {
 
-    protected static Card cardWithSms = new Card(
-            PropertyHelper.getConf().getCardNumberWithSMS(),
-            PropertyHelper.getConf().getCardYearWithSMS(),
-            PropertyHelper.getConf().getCardMonthWithSMS(),
-            PropertyHelper.getConf().getCardNameWithSMS(),
-            PropertyHelper.getConf().getCardCvcWithSMS());
-
-    protected static Card card = new Card(
-            PropertyHelper.getConf().getCardNumber(),
-            PropertyHelper.getConf().getCardYear(),
-            PropertyHelper.getConf().getCardMonth(),
-            PropertyHelper.getConf().getCardName(),
-            PropertyHelper.getConf().getCardCvc());
-
-    protected Order order;
-
-    protected static void sleep() {
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    protected Order createOrder(long amount, int currency, int sessionTimeoutSecs) throws JsonProcessingException {
-        order = OrderFactory.getFactory().createOrder(
-                PropertyHelper.getConf().startUrl(),
-                PropertyHelper.getConf().getUserName(),
-                PropertyHelper.getConf().getUserPassword(),
-                amount,
-                PropertyHelper.getConf().returnUrl(),
-                currency,
-                sessionTimeoutSecs
-        );
-        Assertions.assertEquals(OrderStatus.CREATED, order.getOrderStatus());
-        return order;
-    }
-
-    @BeforeAll
-    public static void initial() {
-        factory = OrderFactory.getFactory();
-        cardWithSms = new Card(
-                PropertyHelper.getConf().getCardNumberWithSMS(),
-                PropertyHelper.getConf().getCardYearWithSMS(),
-                PropertyHelper.getConf().getCardMonthWithSMS(),
-                PropertyHelper.getConf().getCardNameWithSMS(),
-                PropertyHelper.getConf().getCardCvcWithSMS()
-        );
-        card = new Card(
-                PropertyHelper.getConf().getCardNumber(),
-                PropertyHelper.getConf().getCardYear(),
-                PropertyHelper.getConf().getCardMonth(),
-                PropertyHelper.getConf().getCardName(),
-                PropertyHelper.getConf().getCardCvc()
-        );
-    }
 
     @Test
     public void CreateOrderWithBadDataTest() throws JsonProcessingException {
 
-        Assertions.assertThrows(IllegalArgumentException.class, ()->{OrderFactory.getFactory().createOrder(
-                PropertyHelper.getConf().startUrl(),
-                null,
-                null,
-                0,
-                null,
-                0,
-                1200
-        );});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            OrderFactory.getFactory().createOrder(
+                    PropertyHelper.getConf().startUrl(),
+                    null,
+                    null,
+                    0,
+                    null,
+                    0,
+                    1200
+            );
+        });
     }
 
     @Test
@@ -156,6 +96,7 @@ public class OrderTest {
         order.reverse();
         Assertions.assertEquals(OrderStatus.REVERSED, order.getOrderStatus());
     }
+
     @Test
     public void doubleReverseTest() throws JsonProcessingException {
         createOrder(10000, 643, 1200);
@@ -176,6 +117,7 @@ public class OrderTest {
         order.reverse();
         Assertions.assertEquals(OrderStatus.DEPOSITED, order.getOrderStatus());
     }
+
     @Test
     public void reverseNotPayTest() throws JsonProcessingException {
         createOrder(10000, 643, 1200);
@@ -203,16 +145,17 @@ public class OrderTest {
     @Test
     public void sessionTimeOutDeclinedWithPayTest() throws JsonProcessingException {
         createOrder(10000, 643, 10);
-        if(maxCountOfPayTry>1){
+        if (maxCountOfPayTry > 1) {
 
 
-        order.pay(card.getYear(),
-                card.getMonth(),
-                "222222222222",
-                card.getName(),
-                card.getCvc(),
-                "ru",
-                null); }
+            order.pay(card.getYear(),
+                    card.getMonth(),
+                    "222222222222",
+                    card.getName(),
+                    card.getCvc(),
+                    "ru",
+                    null);
+        }
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {

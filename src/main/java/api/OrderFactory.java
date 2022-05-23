@@ -22,7 +22,7 @@ public class OrderFactory {
 
     public Order createOrder(String basicUrl, String userName, String password, long amount, String returnUrl, int currency, int sessionTimeoutSecs) throws JsonProcessingException {
         RequestSpecification specification = new RequestSpecBuilder()
-                .setBaseUri(basicUrl+register)
+                .setBaseUri(basicUrl + register)
                 .addParam("userName", userName)
                 .addParam("password", password)
                 .addParam("amount", amount)
@@ -34,8 +34,8 @@ public class OrderFactory {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode newNode = mapper.readTree(response.asString());
 
-        if( newNode.path("errorCode").asInt()>0)throw new  IllegalArgumentException();
-        return new Order( newNode.path("orderId").textValue(),newNode.path("formUrl").textValue(),userName,password,basicUrl);
+        if (newNode.path("errorCode").asInt() > 0) throw new IllegalArgumentException();
+        return new Order(newNode.path("orderId").textValue(), newNode.path("formUrl").textValue(), userName, password, basicUrl);
 
     }
 

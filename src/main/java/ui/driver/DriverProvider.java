@@ -11,16 +11,16 @@ import java.time.Duration;
 
 public class DriverProvider {
 
-        private static WebDriver driver;
+    private static WebDriver driver;
 
-        public static WebDriver getDriver() {
+    public static WebDriver getDriver() {
         AppConfig config = PropertyHelper.getConf();
         if (driver == null) {
             if (config.webDriverBrowserName().equalsIgnoreCase(Browsers.CHROME.getName())) {
-               WebDriverManager.chromedriver().setup();
+                WebDriverManager.chromedriver().setup();
                 driver = new ChromeDriver();
             } else if (config.webDriverBrowserName().equalsIgnoreCase(Browsers.FIREFOX.getName())) {
-               WebDriverManager.firefoxdriver().setup();
+                WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
             } else {
                 throw new IllegalArgumentException(config.webDriverBrowserName() + " is not supported");
@@ -33,10 +33,10 @@ public class DriverProvider {
         return driver;
     }
 
-        public static void tearDown() {
+    public static void tearDown() {
         if (driver != null) {
             driver.quit();
             driver = null;
         }
     }
-    }
+}
